@@ -5,8 +5,8 @@ module.exports = {
     findResources,
     findTasks,
     findById,
-    // getInstructions,
-    // getAllInstructions,
+    addProject,
+    
 };
 
 function findById(id) {
@@ -35,3 +35,11 @@ function findTasks() {
 //         .select('p.project_name', 'p.project_description', 't.task_description', 't.task_notes', 't.task_completed')
 //         .where('p.id', project_id)
 // }
+
+function addProject(project) {
+    return db('projects')
+        .insert(project)
+        .then(ids => {
+            return findById(ids[0]);
+          });
+}

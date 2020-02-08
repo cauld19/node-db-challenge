@@ -35,6 +35,20 @@ router.get('/tasks', (req, res) => {
           })
 });
 
+router.post('/', validateUser, (req, res) => {
+    const newPost = req.body;
+
+
+    Projects.addProject(newPost)
+            .then(post => {
+                res.status(201).json(post);
+            })
+            .catch(err => {
+                res.status(500).json({ error: "There was an error while saving the project to the database" });
+            })
+        
+});
+
 // custom middleware
 
 function validateProjectId(req, res, next) {
@@ -53,15 +67,15 @@ function validateProjectId(req, res, next) {
       })
   }
   
-//   function validateUser(req, res, next) {
-//     const projectData = req.body;
-//     if(!projectData) {
-//       res.status(400).json({ message: "missing user data" });
-//     } else if (!projectData.text) {
-//       res.status(400).json({ message: 'missing required text field'})
-//     } else {
-//       next();
-//     }
-//   }
+  function validateUser(req, res, next) {
+    const projectData = req.body;
+    if(!projectData) {
+      res.status(400).json({ message: "missing project data" });
+    } else if (!projectData.project_name) {
+      res.status(400).json({ message: 'missing required text field'})
+    } else {
+      next();
+    }
+  }
 
 module.exports = router;
