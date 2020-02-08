@@ -64,7 +64,13 @@ router.post('/resources', validateResource, (req, res) => {
 });
 
 router.post('/:id/tasks', validateProjectId, validateTask, (req, res) => {
-    const newTask = req.body;
+    // const newTask = req.body;
+
+    const newTask = {
+        project_id: req.params.id,
+        task_description: req.body.task_description,
+        task_notes: req.body.task_notes
+      };
 
 
     Projects.addTask(newTask)
