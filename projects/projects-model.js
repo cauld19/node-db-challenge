@@ -33,10 +33,16 @@ function findTasks() {
 
 // function findProjectById(id) {
 //     return db('projects as p') 
-//         .join('tasks as t', 'p.id', 't.project_id')
-//         .select('p.project_name', 'p.project_description', 'p.project_completed')
-//         .select('t.task_description', 't.task_notes')
-//         .where( 't.id',  id )
+//         // .join('tasks as t', 'p.id', 't.project_id')
+//         // .select('p.project_name', 'p.project_description', 'p.project_completed')
+//         // .select('t.task_description', 't.task_notes')
+//         .where( {id} )
+//         .first()
+// }
+
+// function findResourcesById(project_id) {
+//     return db('resources')
+//         .where( 'resources.id', project_id )
 //         .first()
 // }
 
