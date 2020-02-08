@@ -2,7 +2,7 @@ const db = require('../data/db-config.js');
 
 module.exports = {
     find,
-    // getShoppingList,
+    findResources,
     // findById,
     // getInstructions,
     // getAllInstructions,
@@ -10,4 +10,8 @@ module.exports = {
 
 function find() {
     return db('projects')
+}
+
+function findResources() {
+    return db('resources')
 }
