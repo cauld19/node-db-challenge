@@ -35,6 +35,19 @@ router.get('/tasks', (req, res) => {
           })
 });
 
+router.get('/:id', (req, res) => {
+    
+    Projects.findProjectById(req.params.id)
+          .then(projects => {
+              res.status(200).json(projects);
+          })
+          .catch(err => {
+              res.status(500).json({ error: "The project information could not be retrieved." });
+          })
+});
+
+
+
 router.post('/', validateProject, (req, res) => {
     const newProject = req.body;
 
