@@ -6,8 +6,8 @@ module.exports = {
     findTasks,
     findById,
     addProject,
-    addResource
-    
+    addResource,
+    addTask
 };
 
 function findById(id) {
@@ -48,6 +48,14 @@ function addProject(project) {
 function addResource(resource) {
     return db('resources')
         .insert(resource)
+        .then(ids => {
+            return findById(ids[0]);
+          });
+}
+
+function addTask(task) {
+    return db('tasks')
+        .insert(task)
         .then(ids => {
             return findById(ids[0]);
           });

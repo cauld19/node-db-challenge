@@ -63,25 +63,39 @@ router.post('/resources', validateResource, (req, res) => {
         
 });
 
+router.post('/:id/tasks', validateProjectId, validateTask, (req, res) => {
+    const newTask = req.body;
+
+
+    Projects.addTask(newTask)
+            .then(task => {
+                res.status(201).json(task);
+            })
+            .catch(err => {
+                res.status(500).json({ error: "There was an error while saving the task to the database" });
+            })
+        
+});
+
 
 
 // custom middleware
 
-// function validateProjectId(req, res, next) {
-//     const {id} = req.params;
-//     Projects.getById(id)
-//       .then(project => {
-//         if(project) {
-//           req.project = project;
-//           next();
-//         } else {
-//           res.status(400).json({ message: "invalid project id" });
-//         }   
-//       })
-//       .catch(err => {
-//         res.status(500).json({message: 'exception error'});
-//       })
-//   }
+function validateProjectId(req, res, next) {
+    const {id} = req.params;
+    Projects.findById(id)
+      .then(project => {
+        if(project) {
+          req.project = project;
+          next();
+        } else {
+          res.status(400).json({ message: "invalid project id" });
+        }   
+      })
+      .catch(err => {
+        res.status(500).json({message: 'exception error'});
+      })
+  }
   
   function validateProject(req, res, next) {
     const projectData = req.body;
@@ -100,6 +114,17 @@ router.post('/resources', validateResource, (req, res) => {
       res.status(400).json({ message: "missing project data" });
     } else if (!projectData.resource_name ) {
       res.status(400).json({ message: 'missing required text field'})
+    } else {
+      next();
+    }
+  }
+
+  function validateTask(req, res, next) {
+    const TaskData = req.body;
+    if(!TaskData) {
+      res.status(400).json({ message: "missing task data" });
+    } else if (!TaskData.task_description) {
+      res.status(400).json({ message: 'missing required field'})
     } else {
       next();
     }
