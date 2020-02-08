@@ -35,13 +35,13 @@ router.get('/tasks', (req, res) => {
           })
 });
 
-router.post('/', validateUser, (req, res) => {
-    const newPost = req.body;
+router.post('/', validateProject, (req, res) => {
+    const newProject = req.body;
 
 
-    Projects.addProject(newPost)
-            .then(post => {
-                res.status(201).json(post);
+    Projects.addProject(newProject)
+            .then(project => {
+                res.status(201).json(project);
             })
             .catch(err => {
                 res.status(500).json({ error: "There was an error while saving the project to the database" });
@@ -49,29 +49,56 @@ router.post('/', validateUser, (req, res) => {
         
 });
 
+router.post('/resources', validateResource, (req, res) => {
+    const newResource = req.body;
+
+
+    Projects.addResource(newResource)
+            .then(resource => {
+                res.status(201).json(resource);
+            })
+            .catch(err => {
+                res.status(500).json({ error: "There was an error while saving the resource to the database" });
+            })
+        
+});
+
+
+
 // custom middleware
 
-function validateProjectId(req, res, next) {
-    const {id} = req.params;
-    Projects.getById(id)
-      .then(project => {
-        if(project) {
-          req.project = project;
-          next();
-        } else {
-          res.status(400).json({ message: "invalid project id" });
-        }   
-      })
-      .catch(err => {
-        res.status(500).json({message: 'exception error'});
-      })
-  }
+// function validateProjectId(req, res, next) {
+//     const {id} = req.params;
+//     Projects.getById(id)
+//       .then(project => {
+//         if(project) {
+//           req.project = project;
+//           next();
+//         } else {
+//           res.status(400).json({ message: "invalid project id" });
+//         }   
+//       })
+//       .catch(err => {
+//         res.status(500).json({message: 'exception error'});
+//       })
+//   }
   
-  function validateUser(req, res, next) {
+  function validateProject(req, res, next) {
     const projectData = req.body;
     if(!projectData) {
       res.status(400).json({ message: "missing project data" });
-    } else if (!projectData.project_name) {
+    } else if (!projectData.project_name ) {
+      res.status(400).json({ message: 'missing required text field'})
+    } else {
+      next();
+    }
+  }
+
+  function validateResource(req, res, next) {
+    const projectData = req.body;
+    if(!projectData) {
+      res.status(400).json({ message: "missing project data" });
+    } else if (!projectData.resource_name ) {
       res.status(400).json({ message: 'missing required text field'})
     } else {
       next();
