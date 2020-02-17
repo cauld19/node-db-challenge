@@ -52,8 +52,13 @@ router.get('/:id', (req, res) => {
           .then(projects => {
                 const {project_id, project_name, project_description, project_completed} = projects[0]
                 const resourcesList = projects.map(resource => {
-                  const {resource_id, resource_name, resource_description} = resource
-                  return {resource_id, resource_name, resource_description}    
+                  // const {resource_id, resource_name, resource_description} = resource
+                  // return {resource_id, resource_name, resource_description} 
+                  
+                  const resourceId = resource.resource_id
+                  const resourceDesc = resource.resource_description
+                  const resourceName = resource.resource_name
+                  return {resourceId, resourceName, resourceDesc}
                 })
                 Projects.findTasksById(req.params.id)
                   .then(tasks => {
