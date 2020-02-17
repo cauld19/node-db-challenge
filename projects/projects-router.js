@@ -53,8 +53,7 @@ router.get('/:id', (req, res) => {
                 const {project_id, project_name, project_description, project_completed} = projects[0]
                 const resourcesList = projects.map(resource => {
                   const {resource_id, resource_name, resource_description} = resource
-                  return {resource_id, resource_name, resource_description}
-                  
+                  return {resource_id, resource_name, resource_description}    
                 })
                 Projects.findTasksById(req.params.id)
                   .then(tasks => {
@@ -75,13 +74,9 @@ router.get('/:id', (req, res) => {
                     })
                 })
           })
-          
-
           .catch(err => {
               res.status(500).json({ error: "The project information could not be retrieved." });
-          })
-        
-        
+          })        
 });
 
 
