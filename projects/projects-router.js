@@ -35,15 +35,53 @@ router.get('/tasks', (req, res) => {
           })
 });
 
+router.get('/:id/tasks', validateProjectId, (req, res) => {
+    Projects.findTasksById(req.params.id)
+          .then(tasks => {
+              res.status(200).json(tasks);
+          })
+          .catch(err => {
+              res.status(500).json({ error: "The task information could not be retrieved." });
+          })
+});
+
 router.get('/:id', (req, res) => {
-    
+
+
     Projects.findProjectById(req.params.id)
           .then(projects => {
-              res.status(200).json(projects);
+                const {project_id, project_name, project_description, project_completed} = projects[0]
+                const resourcesList = projects.map(resource => {
+                  // const {resource_id, resource_name, resource_description} = resource
+                  // return {resource_id, resource_name, resource_description} 
+                  
+                  const resourceId = resource.resource_id
+                  const resourceDesc = resource.resource_description
+                  const resourceName = resource.resource_name
+                  return {resourceId, resourceName, resourceDesc}
+                })
+                Projects.findTasksById(req.params.id)
+                  .then(tasks => {
+                    res.status(201).json({
+                      id: project_id,
+                      description: project_description,
+                      name: project_name,
+                      completed: project_completed ? true : false,
+                      tasks: tasks.map(task => {
+                        return {
+                          id: task.id,
+                          description: task.task_description,
+                          notes: task.task_notes,
+                          completed: task.task_completed ? true : false
+                        }
+                      }),
+                      resources: resourcesList
+                    })
+                })
           })
           .catch(err => {
               res.status(500).json({ error: "The project information could not be retrieved." });
-          })
+          })        
 });
 
 

@@ -8,7 +8,9 @@ module.exports = {
     findProjectById,
     addProject,
     addResource,
-    addTask
+    addTask,
+    findTasksById,
+    // findAllProjectById
 };
 
 function findById(id) {
@@ -31,26 +33,33 @@ function findTasks() {
         .select('p.project_name', 'p.project_description', 't.task_description', 't.task_notes', 't.task_completed')
 }
 
-// function findProjectById(id) {
-//     return db('projects as p') 
-//         .join('tasks as t', 'p.id', 't.project_id')
-//         .select('p.project_name', 'p.project_description', 'p.project_completed')
-//         .select('t.task_description', 't.task_notes')
-//         .where( 't.id',  id )
-//         .first()
-// }
+    
 
-function findProjectById(project_id) {
-    return db('projects_resources as pr') 
-        .join('resources as r', 'pr.resource_id', 'r.id')
-        .join('projects as p', 'pr.project_id', 'p.id')
-        .join('tasks as t', 'p.id', 't.project_id')
-        .select('t.id', 't.task_description', 't.task_notes', 't.task_completed')
-        .select('p.id', 'p.project_name', 'p.project_description', 'p.project_completed')
-        .select('r.id', 'r.resource_name', 'r.resource_description')
-        .where( 't.id', project_id )
-        .first()
+    function findProjectById(id) {
+        return db('projects_resources as pr')
+            .join('projects as p', 'pr.project_id', 'p.id')
+            .join('resources as r', 'pr.resource_id', 'r.id')
+            .where( 'p.id', id )
+        }
+
+
+
+
+function findTasksById(project_id) {
+    return db('tasks as t')
+       
+        .where( { project_id })
 }
+
+function findResourcesById (project_id) {
+    return db('projects_resources as pr')
+        .join('resources as r', 'r.id', 'pr.resource_id')
+        .join('projects as p', 'pr.project_id', 'p.id')
+        .select('p.project_name', 'r.resource_name')
+        .where({project_id})
+}
+
+
 
 function addProject(project) {
     return db('projects')
